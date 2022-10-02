@@ -48,46 +48,46 @@ def DualExpLz8 (compressedData, compressedSize):
     while True:
 
         # 00119dc4
-        t0 = ToSignedByte(compressedData[sPos])
+        compressedByte = ToSignedByte(compressedData[sPos])
         sPos += 1
 
-        if t0 >= 0:
-            v0 = compressedData[sPos]
+        if compressedByte >= 0:
+            uncompressedByte = compressedData[sPos]
 
             # 00119de0
             v1 = compressedData[sPos + 1]
             sPos += 2
             v1 = v1 << 8
-            v0 = v1 | v0
-            v1 = v0 & 0x3FF
+            uncompressedByte = v1 | uncompressedByte
+            v1 = uncompressedByte & 0x3FF
             t2 = dPos + v1
-            v1 = v0 >> 0xA       
+            v1 = uncompressedByte >> 0xA       
 
             # 00119DFC
             while True:
-                v0 = uncompressedData[t2 - 0x400]
+                uncompressedByte = uncompressedData[t2 - 0x400]
                 t2 += 1
-                uncompressedData.append(v0)
+                uncompressedData.append(uncompressedByte)
                 dPos += 1
                 if v1 == 0:
                     break
                 v1 -= 1
             
             # 00119E18
-            v0 = uncompressedData[t2 - 0x400]
-            uncompressedData.append(v0)
+            uncompressedByte = uncompressedData[t2 - 0x400]
+            uncompressedData.append(uncompressedByte)
         
         else:
-            v0 = compressedData[sPos]
+            uncompressedByte = compressedData[sPos]
 
             # 00119DD4
             sPos += 1
-            uncompressedData.append(v0)
+            uncompressedData.append(uncompressedByte)
         
         for value in comparaison_values:
 
             # 00119E20
-            v0 = t0 & value
+            uncompressedByte = compressedByte & value
             if sPos == compressedSize:
                 dPos += 1
                 return uncompressedData
@@ -95,37 +95,37 @@ def DualExpLz8 (compressedData, compressedSize):
                 dPos += 1
 
                 # 00119E2C
-            if v0 == 0:
-                v0 = compressedData[sPos]
+            if uncompressedByte == 0:
+                uncompressedByte = compressedData[sPos]
                 
                 # 00119E40
                 v1 = compressedData[sPos + 1]
                 sPos += 2
                 v1 = v1 << 8
-                v0 = v1 | v0
-                v1 = v0 & 0x3FF
+                uncompressedByte = v1 | uncompressedByte
+                v1 = uncompressedByte & 0x3FF
                 t2 = dPos + v1
-                v1 = v0 >> 0xA       
+                v1 = uncompressedByte >> 0xA       
 
                 # 00119E5C
                 while True:
-                    v0 = uncompressedData[t2 - 0x400]
+                    uncompressedByte = uncompressedData[t2 - 0x400]
                     t2 += 1
-                    uncompressedData.append(v0)
+                    uncompressedData.append(uncompressedByte)
                     dPos += 1
                     if v1 == 0:
                         break
                     v1 -= 1
                 
                 # 00119E78
-                v0 = uncompressedData[t2 - 0x400]
-                uncompressedData.append(v0)
+                uncompressedByte = uncompressedData[t2 - 0x400]
+                uncompressedData.append(uncompressedByte)
             else:    
-                v0 = compressedData[sPos]
+                uncompressedByte = compressedData[sPos]
             
                 # 00119E34
                 sPos += 1
-                uncompressedData.append(v0)
+                uncompressedData.append(uncompressedByte)
 
         # 0011A0C0
         if sPos == compressedSize:
